@@ -1,42 +1,25 @@
-import random
+from Game import Game
+from configurate import ConfiguratorApp
+import customtkinter as ctk
 
-class Game():
-    def __init__(self) -> None:
-        self.number = random.randint(1, 40)
-        self.is_game = True
-        self.attempts = 0
-    
-    def player_number(self, player_numb) -> None:
-        if player_numb == 0:
-            print("It was nice to play, I'll wait for you again :)")
-            self.is_game = False
-        elif player_numb > self.number:
-            print("Your number is higher than what I guessed :)")
-            self.attempts += 1
-        elif player_numb < self.number:
-            print("Your number is less than what I guessed :)")
-            self.attempts += 1
-        elif player_numb == self.number:
-            print("You guessed :)")
-            print("I have thought of a new number, try to guess it.")
-            self.attempts = 0
-            self.number = random.randint(1, 40)
-        
-        self.clue()
-        
-    def clue(self) -> None:
-        if self.attempts >= 5:
-            print(f"My number is between {self.number - random.randint(7, 13)} and {self.number + random.randint(7, 13)}")
-            self.attempts = 0
-
+app = ctk.CTk()
 game = Game()
-print("""
-      Welcome to the game guess the number, I guess a number from 1 to 40 and you try to guess it.
-      If you want to leave the game, write the number 0.
-      If anything, I have already guessed the number :)
-      """)
+conf_app = ConfiguratorApp()
 
-while game.is_game:
-    player_numb = int(input("Enter number --> "))
-    print("")
-    game.player_number(player_numb)
+class main():
+    def __init__(self) -> None:
+        app.title(" guess the number")
+        app.geometry("500x175")
+
+        label = ctk.CTkLabel(master= app, text=game.start_game())
+        entry_frame = ctk.CTkFrame(master=app)
+        entry = ctk.CTkEntry(master=entry_frame, placeholder_text="Enter the number", width=200)
+        submit_button = ctk.CTkButton(master=entry_frame, text="Enter", command=lambda: conf_app.select_button(entry, game, label), width=100)
+        
+        label.pack()
+        entry_frame.pack(pady=20)
+        entry.pack(side="left", padx=5)
+        submit_button.pack(side="left", padx=5)
+
+init = main()
+app.mainloop()
